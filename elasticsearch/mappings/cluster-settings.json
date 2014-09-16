@@ -1,0 +1,77 @@
+{
+    "settings": {
+        "index.analysis.analyzer.default.type": "standard",
+        "index.mapper.dynamic": "true",
+        "index.number_of_replicas": "1",
+        "index.number_of_shards": "6",
+        "index.store.compress.stored": "true",
+        "index.store.compress.tv": "true"
+    },
+    "mappings": {
+        "_default_": {
+            "_all": {
+                "enabled": true
+            },
+            "_timestamp": {
+                "enabled": true,
+                "store": true
+            },
+            "_ttl": {
+                "default": "30d",
+                "enabled": true
+            }
+        },
+        "applications": {
+            "_timestamp": {
+                "enabled": true,
+                "store": true
+            },
+            "properties": {
+                "cluster": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "cluster.id": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "id": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                }
+            }
+        },
+        "metrics": {
+            "_timestamp": {
+                "enabled": true,
+                "store": true
+            },
+            "properties": {
+                "cluster": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "cluster.id": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                }
+            }
+        },
+        "scheduler": {
+            "_timestamp": {
+                "enabled": true,
+                "store": true
+            },
+            "properties": {
+                "cluster": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "cluster.id": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

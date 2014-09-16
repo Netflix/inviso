@@ -1,0 +1,45 @@
+/*
+ *
+ *  Copyright 2014 Netflix, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+apply plugin: 'war'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+dependencies {
+	  compile 'org.apache.commons:commons-lang3:3.2.1'
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.glassfish.jersey:project:2.4.1'
+    compile 'org.apache.hadoop:hadoop-core:1.2.1'
+    compile 'org.apache.hadoop:hadoop-tools:1.2.1'
+    //compile 'com.amazonaws:aws-java-sdk:1.6.6'
+    compile 'net.sf.ehcache:ehcache:2.7.4'
+    compile 'xerces:xercesImpl:2.11.0'
+    compile 'xalan:xalan:2.7.1'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.3.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.1'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.3.1'
+
+    compile 'com.google.inject.extensions:guice-servlet:3.0'
+}
+
+
+war {
+    archiveName = 'inviso#mr1#v0.war'
+}

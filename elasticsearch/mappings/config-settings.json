@@ -1,0 +1,51 @@
+{
+    "settings" : {
+      "index.analysis.analyzer.default.type" : "standard",
+      "index.number_of_replicas" : "1",
+      "index.number_of_shards" : "6",
+      "index.mapper.dynamic" : "true",
+      "index.store.compress.tv" : "true",
+      "index.store.compress.stored" : "true"
+    },
+    "mappings" : {
+      "_default_":{
+        "_all": {
+          "enabled": true
+        },
+        "_timestamp" : {
+          "enabled" : true,
+          "store" : true
+        },
+        "_ttl" : { 
+          "enabled" : true, 
+          "default" : "90d" 
+        }
+      }
+    "config" : {
+      "_timestamp" : {
+        "enabled" : true,
+        "store" : true
+      },
+      "properties" : {
+        "dataoven.job.id" : {
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "genie.job.id" : {
+          "type" : "string",
+          "store" : "no",
+          "index" : "not_analyzed"
+        },
+        "hive.query.id" : {
+          "type" : "string",
+          "index" : "not_analyzed"
+        },
+        "pig.script.id" : {
+          "type" : "string",
+          "index" : "not_analyzed"
+        }
+      }
+    }
+
+    }
+}
