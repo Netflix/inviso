@@ -1,0 +1,15 @@
+build
+.gradle
+.project
+.pydevproject
+.classpath
+private
+.settings
+catalog.xml
+core-site.xml
+venv
+*.pyc
+.idea
+*.iml
+*.ipr
+*.iws
