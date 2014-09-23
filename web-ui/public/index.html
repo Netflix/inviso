@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!--
+
+  Copyright 2014 Netflix, Inc.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hadoop Job Visualization">
+    <meta name="author" content="dweeks">
+
+    <title>Inviso</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.min.css">
+    <link href="css/inviso.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/css/jquery.ui.all.css" rel="stylesheet">
+    <link href="lib/jquery-tipsy/css/tipsy.css" rel="stylesheet">
+    <link href="lib/jgrowl/jquery.growl.css" rel="stylesheet" type="text/css" />
+    <link href="js/charts/series.widget.css" rel="stylesheet">
+    <link href="js/charts/stream.widget.css" rel="stylesheet">
+    <link href="js/common/job/job.widget.css" rel="stylesheet">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js'></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.3.0/jquery.jgrowl.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/elasticsearch/2.3.1/elasticsearch.jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/URI.js/1.11.2/URI.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.min.js"></script>
+
+    <!-- Local Libs -->
+    <script src="lib/jquery-tipsy/js/jquery.tipsy.js"></script>
+    <script src='lib/pager-1.0.1/pager.js'></script>
+
+    <!-- Widgets -->
+    <script src="js/charts/layout/task.js"></script>
+    <script src="js/charts/series.widget.js"></script>
+    <script src="js/charts/stream.widget.js"></script>
+    <script src="js/charts/workflow.widget.js"></script>
+
+    <!-- Applications -->
+    <script src="coffee/apps/application.coffee" type="text/coffeescript"></script>
+    <script src="coffee/apps/mapreduce.coffee" type="text/coffeescript"></script>
+
+    <script src="js/prototypes.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/cluster.js"></script>
+    <script src="js/profile.js"></script>
+
+    <script src="coffee/inviso.coffee" type="text/coffeescript"></script>
+    <script src="coffee/main.coffee" type="text/coffeescript"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
+  </head>
+
+  <body style="display: none" data-bind="visible: true">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header navbar-left">
+          <a class="navbar-brand" href="#">Inviso</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="nav-search active"><a href="#" data-bind="page-href: 'search'">Search<b></b></a></li>
+            <li class="nav-cluster"><a href="#" data-bind="page-href: 'cluster'">Cluster<b></b></a></li>
+            <li class="nav-profiler"><a href="#" data-bind="page-href: 'profiler'">Profiler<b></b></a></li>
+          </ul>
+            <form class="search-form navbar-form navbar-right" role="search" style="display: none">
+              <button style="display:none" type="button" class="nav-search-col-button btn btn-default" data-toggle="popover"><span class="glyphicon glyphicon-eye-close"></span></button>
+              <div class="form-group search-nav-group">
+                <input type="search" class="form-control search-nav-input" placeholder="Search">
+              </div>
+
+              <img id="search-spinner" data-bind="visible: search.searching()" src="img/spinner.gif"/>
+            </form>
+            <div data-bind="if: loading.total() > 0">
+                <div class="nav navbar-text navbar-right progress progress-striped active loading-status" style="width: 300px; margin-top:15px;">
+                    <div class="progress-bar loading-progress"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div data-bind="with: loading, text: loading.complete() +'/'+loading.total()" class="progress-status"></div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+        <!--Search-->
+        <div data-bind="page: {id: 'search', role: 'start', beforeShow: initSearchPage, afterShow: focusSearch, afterHide: disableStandardSearch, source: 'page/search.html' }"></div>
+
+        <!--Cluster-->
+        <div data-bind="page: {id: 'cluster', sourceLoaded: initClusterView, sourceOnShow: 'page/cluster.html' }"></div>
+
+        <!--Profiler-->
+        <div data-bind="page: {id: 'profiler', beforeShow: initProfilePage, source: 'page/profiler.html' }"></div>
+    </div>
+
+  </body>
+</html>

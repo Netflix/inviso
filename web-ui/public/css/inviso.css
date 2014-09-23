@@ -1,0 +1,260 @@
+/*
+ *
+ *  Copyright 2014 Netflix, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+html {
+   overflow-y: -moz-scrollbars-vertical;
+   /*overflow-y: hidden;*/
+}
+
+body {
+  padding-top: 70px;
+  height: 90%;
+  overflow-y: scroll;
+}
+
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+  height: auto;
+  width: 100%;
+}
+
+.chart-wrapper {
+    height: 100%;
+    vertical-align: top;
+    position: relative;
+    display: inline-block;
+    /*overflow: auto;*/
+    width: 100%;
+    white-space: nowrap;
+    margin-top: 10px
+}
+
+.chart {
+    vertical-align: top;
+    margin: 5px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.container {
+    width: 98%;
+    min-height: 80%;
+}
+
+.search-nav-group input {
+    width: 500px !important;
+}
+
+.search-nav-input {
+    width: 500px;
+}
+
+.tt-suggestion p {
+    white-space: nowrap !important;
+}
+
+#search-wrapper {
+    margin-top: 50px;
+}
+
+#table-wrapper {
+    margin-top: 50px;
+}
+
+#table-wrapper tr {
+    white-space: nowrap;
+
+}
+
+#table-wrapper td {
+    padding: 3px 8px 3px 8px;
+}
+
+#table-wrapper td,th {
+  max-width: 500px;
+  overflow-x: scroll;
+}
+
+#table-wrapper td::-webkit-scrollbar {
+    display: none;
+}
+
+.search-result td div {
+  display: inline-block;
+}
+
+#search-spinner {
+  margin-left: -38px;
+  height: 25px;
+}
+
+#column-select-list {
+  padding: 0;
+  margin-left: 3px;
+}
+
+#column-select-list input {
+  margin-right: 3px;
+}
+
+#workflows {
+    list-style-type: none;
+}
+
+.timeline {
+  width: 100%;
+  margin: 5px 2px 2px 2px;
+}
+
+.workflow-panel {
+    float: left;
+    width: 100%;
+}
+
+.workflow {
+    width: 100%;
+    height: 100%;
+
+    margin-top: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    display: inline-block;
+    overflow-x: scroll;
+    border: none;
+}
+
+.job {
+    min-width: 275px;
+    min-height: 600px;
+    //max-height: 600px;
+
+    margin: 5px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.panel-title {
+    text-align: center;
+    display: inline-block;
+}
+
+.panel-heading {
+    padding: 4px 6px;
+}
+
+.close-workflow {
+    margin-left: 10px;
+    opacity: 0.1;
+}
+
+.close-workflow:hover {
+    opacity: 1;
+}
+
+.timeseries {
+  min-width: 275px;
+  max-width: 500px;
+  min-height: 600px;
+}
+
+.counter-table {
+    margin-top: 10px;
+}
+
+.table-super-condensed > thead > tr > th,
+.table-super-condensed > tbody > tr > th,
+.table-super-condensed > tfoot > tr > th,
+.table-super-condensed > thead > tr > td,
+.table-super-condensed > tbody > tr > td,
+.table-super-condensed > tfoot > tr > td {
+  padding: 1px;
+}
+
+.progress-status {
+    position: relative;
+    left: 0;
+    width: 100%;
+    text-align: center;
+
+}
+
+.popover {
+    z-index: 10000;
+}
+
+.counter-group {
+    background-color: dimgray;
+}
+
+.genie-icon, .lipstick-icon, .hadoop-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.tipsy-inner {
+  overflow-x: scroll;
+}
+
+/*  Cluster Page CSS */
+#application-stream {
+  width: 100%;
+  height: 40vh;
+  margin-left: 0;
+}
+
+#capacity-stream {
+  width: 100%;
+  height: 30vh;
+  margin-left: 0;
+}
+
+#scheduler-stream {
+  width: 100%;
+  height: 600px;
+  margin-left: 0;
+}
+
+.stream-action {
+  fill: #656565;
+  stroke: black;
+  stroke-width: 2px;
+  opacity: 0.3;
+}
+
+.stream-action.active {
+  opacity: 0.7 !important;
+}
+
+.stream-action:hover {
+  opacity: 0.7;
+}
+
+.brush .extent {
+  stroke: #000;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+.spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
