@@ -1,0 +1,13 @@
+MySQL-python==1.2.5
+argparse==1.2.1
+arrow==0.4.2
+boto==2.26.1
+elasticsearch==1.0.0
+futures==2.1.6
+protobuf==2.5.0
+python-dateutil==2.2
+pytz==2013.9
+requests==2.3.0
+six==1.5.2
+snakebite==2.4.1
+urllib3==1.7.1
