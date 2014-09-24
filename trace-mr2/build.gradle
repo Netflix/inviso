@@ -29,7 +29,6 @@ dependencies {
     compile 'org.apache.hadoop:hadoop-common:2.4.0'
     compile 'org.apache.hadoop:hadoop-client:2.4.0'
     compile 'org.apache.hadoop:hadoop-mapreduce:2.4.0'
-    //compile 'com.amazonaws:aws-java-sdk:1.6.6'
     compile 'net.sf.ehcache:ehcache:2.7.4'
     compile 'xerces:xercesImpl:2.11.0'
     compile 'xalan:xalan:2.7.1'

@@ -4,7 +4,6 @@ from urllib import urlencode
 from elasticsearch import Elasticsearch
 
 from inviso import util
-from inviso import create_connection_context
 from inviso.monitor import Cluster
 from inviso.handler import IndexHandler
 from inviso.publish import DirectPublisher
