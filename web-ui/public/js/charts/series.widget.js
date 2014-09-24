@@ -15,6 +15,9 @@
  *     limitations under the License.
  *
  */
+
+stickyTooltip = null;
+
 $(function(){
   d3.select('body').on('click', function() {
     if(window.stickyTooltip != null) {
