@@ -19,7 +19,6 @@
 
 package com.netflix.bdp.inviso.history.job;
 
-import com.netflix.bdp.inviso.history.job.json.FilteredMapSerializer;
 import java.util.HashMap;
 import java.util.Map;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -28,7 +27,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
  *
  * @author dweeks
  */
-//@JsonSerialize(using = FilteredMapSerializer.class)
 public class Job extends HashMap<String, Object> {
     private static final String TASKS = "tasks";
     private Map<String, Task> tasks = new HashMap<>();

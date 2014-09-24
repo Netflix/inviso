@@ -44,8 +44,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 
-import net.sf.ehcache.CacheManager;
-
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -91,8 +89,6 @@ public class TraceService implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        CacheManager.getInstance().shutdown();
-       
         try {
             historyLocator.close();
         } catch (Exception e) {
