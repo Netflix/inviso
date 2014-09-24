@@ -53,6 +53,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 /**
+ * Simple Job History Parser
  *
  * @author dweeks
  */
@@ -173,38 +174,5 @@ public class TraceJobHistoryLoader implements JobHistory.Listener {
     public Job getJob() {
         return job;
     }
-    
-    public static void main(String[] args) throws Exception {
-        Configuration conf = new Configuration();
-        
-        String location = "s3n://netflix-inviso/history/61/job_201402031828_39061.history.gz";
-        
-        Path p = new Path(location);
-        CompressionCodec codec = new CompressionCodecFactory(conf).getCodec(p);
-        FileSystem localFs = FileSystem.getLocal(conf);
-        
-        Path tmp = localFs.makeQualified(new Path("/tmp/"+p.getName().replaceAll(".gz", "")));
-        
-        System.out.println(p);
-        long start = System.currentTimeMillis();
-        TraceJobHistoryLoader loader = new TraceJobHistoryLoader();
-        
-        InputStream sin = codec.createInputStream(p.getFileSystem(conf).open(p));
-        
-        //FileUtil.copy(p.getFileSystem(conf), p, localFs, tmp, false, conf);
-        OutputStream out = localFs.create(tmp, true);
-        IOUtils.copy(sin, out);
-        
-        JobHistory.parseHistoryFromFS(tmp.toUri().toString(), loader, tmp.getFileSystem(conf));
-        long stop = System.currentTimeMillis();
-        
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectWriter writer = mapper.defaultPrettyPrintingWriter();        
-        //System.out.println(writer.writeValueAsString(loader.getJob()));
-        
-        writer.writeValue(new File("/tmp/test-" + System.currentTimeMillis()), loader.getJob());
-        
-        System.out.println("Processing Time: " + (stop - start));
-    }
-    
+
 }

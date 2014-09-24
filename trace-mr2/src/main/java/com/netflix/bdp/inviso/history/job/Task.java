@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Container for json marshalling.
  *
  * @author dweeks
  */

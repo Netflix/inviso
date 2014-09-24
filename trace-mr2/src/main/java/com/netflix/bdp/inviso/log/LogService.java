@@ -41,6 +41,7 @@ import org.apache.hadoop.yarn.logaggregation.LogAggregationUtils;
 import org.apache.hadoop.yarn.util.ConverterUtils;
 
 /**
+ * REST endpoint to retrieve the contents of a tasks log contents.
  *
  * @author dweeks
  */

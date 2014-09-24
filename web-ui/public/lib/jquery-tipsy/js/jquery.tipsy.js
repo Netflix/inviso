@@ -127,7 +127,7 @@
         },
 
         setTitle: function(value) {
-          console.log(value);
+          //no-op
         },
 
         tip: function() {

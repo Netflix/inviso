@@ -33,6 +33,10 @@ Array.prototype.clone = function() {
   return this.slice(0);
 };
 
+Array.prototype.first = function() {
+  return this[0];
+};
+
 Array.prototype.random = function() {
   return this[Math.floor(Math.random() * this.length)];
 };

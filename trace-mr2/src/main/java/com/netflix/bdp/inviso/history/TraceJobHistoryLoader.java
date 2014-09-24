@@ -49,6 +49,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
 
 /**
+ * Basic handler for loading history file.
  *
  * @author dweeks
  */

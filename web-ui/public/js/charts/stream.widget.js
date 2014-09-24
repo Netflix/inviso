@@ -20,19 +20,21 @@
 
   $.widget( "inviso.stream", {
     options: {
-      margin: { top: 20, right: 0, bottom: 20, left: 100 },
+      margin: { top: 20, right: 0, bottom: 20, left: 115 },
       title: null,
       series: {},
       offset: "wiggle",
       interpolation: "basis",
       scale: { x:d3.scale.linear, y:d3.scale.linear },
+      xLabel: '',
+      yLabel: '',
       filter: _.identity,
       brush: false,
       color: function(d) {
         if(this.c === undefined) {
           this.c = d3.scale.linear().range(["#90cde7", "#2d4fca"]);
         }
-        return this.c(Math.random());
+        return d.color || this.c(Math.random());
       },
       tooltip: function(d) {return d.id;},
       highlightColors: [
@@ -67,6 +69,7 @@
         .attr("class", "chart-title")
         .attr("transform", "translate("+(m.left+10)+","+m.top+")");
 
+      //X-Axis
       this.x = this.options.scale.x()
         .domain([Date.now() - 2*60*60*1000, Date.now()])
         .range([0,this.width - m.left - m.right ]);
@@ -82,6 +85,14 @@
         .attr("transform", "translate("+m.left+"," + (this.height - m.bottom) + ")")
         .call(this.xAxis);
 
+      this.xLabel = this.svg.append('g')
+        .attr('transform', 'translate('+(this.width-m.right-m.left)/2+','+self.height+')');
+      this.xLabel
+        .append('text')
+        .attr('class', 'x-label')
+        .text(this.options.xLabel);
+
+      //Y-Axis
       this.y = this.options.scale.y()
         .domain([0, 100])
         .range([this.height - m.top - m.bottom, 0]);
@@ -94,6 +105,12 @@
         .attr("class","y axis")
         .attr("transform", "translate("+m.left+","+m.top+")")
         .call(this.yAxis);
+
+      this.yLabel = this.svg.append('g')
+        .attr('transform', 'translate(20,'+(self.height -m.top -m.bottom)/2+') rotate(-90)');
+      this.yLabel.append('text')
+        .attr('class', 'y-label')
+        .text(this.options.yLabel);
 
       this.legend = this.svg.append('g')
         .attr('class', 'stream-legend');
@@ -138,6 +155,8 @@
 
       this._updateBrush();
 
+      this._updateLegend();
+
       this.area = d3.svg.area()
         .interpolate(self.options.interpolation)
         .x(function(d) { return self.x(d.x); })
@@ -151,7 +170,7 @@
       selection.enter().append("path")
           .attr("d", this.area)
           .style("fill", function(d) {
-            d.color = self.options.color(d);
+            d.color = d.color || self.options.color(d);
             return d.color;
           })
           .on("click", function(d, i) {
@@ -192,7 +211,7 @@
 
       selection.attr("d", this.area)
       .style("fill", function(d) {
-        d.color = self.options.color(d);
+        d.color = d.color || self.options.color(d);
         return d.color;
       });
 
@@ -215,6 +234,8 @@
         .attr("transform", "translate("+m.left+"," + (this.height - m.bottom) + ")")
         .call(this.xAxis);
 
+      this.svg.select('x-label').text(this.series.xLabel || this.options.xLabel);
+
       var max = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
 
       this.y
@@ -225,6 +246,9 @@
         this.y.base(2);
         this.y.clamp(true);
       }
+
+      this.yLabel.select('.y-label').text(this.series.yLabel || this.options.yLabel);
+      this.yLabel.attr('transform', 'translate(20,'+((this.height -m.top -m.bottom)/2+$(this.element).find('text.y-label')[0].getBBox().width/2)+') rotate(-90)');
 
       this.svg.selectAll('.y.axis').call(this.yAxis);
     },
@@ -253,19 +277,6 @@
 
       this.brushg.selectAll("rect")
         .attr("height", this.height - m.top - m.bottom);
-    },
-
-    _transition: function() {
-      var self = this;
-
-      this.chart.selectAll('path').data(function() {
-        self.layers = self.stack(self.series.data);
-
-        self._updateAxes();
-        return self.layers;
-      }).transition()
-      .duration(1500)
-      .attr("d", this.area);
     },
 
     highlight: function(term) {
@@ -305,7 +316,18 @@
 
       this.chart.selectAll('path').style('fill', this.options.color);
 
-      var selection = this.legend.selectAll('g.stream-legend-item').data(terms, function(d){return d;});
+      this._updateLegend(_.map(terms, function(v,i){return {text: v, color: hl[i%hl.length](0.5)};}));
+    },
+
+    _updateLegend: function(data) {
+      data = data || this.options.legend || this.series.legend;
+
+      if(data == null) {
+        return;
+      }
+
+      var self = this;
+      var selection = this.legend.selectAll('g.stream-legend-item').data(data, function(d){return d.text;});
 
       var groups = selection.enter()
         .append('g')
@@ -317,7 +339,7 @@
           cx: 0,
           cy: 0,
           r: 7,
-          fill: function(d,i) { return hl[i%hl.length](0.5);}
+          fill: function(d,i) { return d.color;}
         });
 
       groups.append('text')
@@ -325,7 +347,7 @@
           x: 15,
           y: 3
         })
-        .text(function(d){return d;});
+        .text(function(d){return d.text;});
 
       var totalLegendWidth = 0;
 
@@ -337,7 +359,7 @@
         );
 
       selection.select('circle')
-        .attr('fill', function(d,i) { return hl[i%hl.length](0.5); });
+        .attr('fill', function(d,i) { return d.color; });
 
       selection.exit().transition().duration(500)
       .attr('transform', function(d, i){
@@ -393,11 +415,10 @@
     },
 
     _setOption: function( key, value ) {
-      if( key === "offset" ) {
-        this.stack.offset(value);
+      if(key === 'yLabel') {
 
-        this._transition();
       }
+
       this._super( key, value );
     },
 

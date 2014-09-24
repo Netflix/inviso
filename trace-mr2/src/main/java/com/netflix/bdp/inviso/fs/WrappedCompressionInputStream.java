@@ -27,6 +27,7 @@ import org.apache.hadoop.fs.Seekable;
 import org.apache.hadoop.io.compress.CompressionInputStream;
 
 /**
+ * Wrapping CompressionInputStream so the job history loader can read a compressed stream.
  *
  * @author dweeks
  */

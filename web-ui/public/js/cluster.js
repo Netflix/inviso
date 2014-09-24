@@ -74,7 +74,7 @@ function getClusters() {
         clusters: {
           terms: {
             field: "cluster",
-            size: 50
+            size: settings.cluster.max
           }
         }
       }
@@ -177,7 +177,7 @@ function scrollSearch(type, cluster, includes, start, stop, callback) {
 }
 
 function loadAppData(cluster, start, stop, includes) {
-  start = Math.floor(start || (Date.now() - 1*60*60*1000));
+  start = Math.floor(start || (Date.now() - settings.cluster.applicationLookback));
   stop = Math.ceil(stop || Date.now());
   includes = ['timestamp', 'id', 'cluster', 'cluster.id', 'queue', 'user', 'startedTime', 'runningContainers', 'allocatedVCores', 'allocatedMB'];
 
@@ -266,18 +266,24 @@ function loadAppData(cluster, start, stop, includes) {
 
     var $as = $('#application-stream');
 
+    function update() {
+      var grouping = $('#group-by').val();
+      var metric = $('#metric').val();
+      var label = $('.metric-form button').text() + " by " + $('.group-by-form button').text();
+      $as.stream('update', {data: groupings[grouping](), yLabel: label});
+    }
+
     $('#group-by, #metric').off('change.inviso').on('change.inviso', function(){
-      $as.stream('update', {data: groupings[$('#group-by').val()]()});
+      update();
     });
 
-    $as.stream('update', {data: groupings[$('#group-by').val()]()});
-
+    update();
     removeSpinner($as);
   });
 }
 
 function loadCapacityStream(cluster, start, stop) {
-  start = start || Date.now() - 3*24*60*60*1000;
+  start = start || Date.now() - settings.cluster.capacityLookback;
   stop = stop || Date.now();
   var includes = [ 'timestamp', 'cluster', 'cluster.id', 'appsRunning', 'appsPending' , 'containersPending' , 'containersReserved', 'containersAllocated'];
 
@@ -313,8 +319,22 @@ function loadCapacityStream(cluster, start, stop) {
       return layer;
     });
 
+    var colorRange = d3.scale.linear().range(["#2d4fca", "#90cde7"]);
+
+    legend = [
+      {text:"Allocated", color:colorRange(0)},
+      {text:"Reserved", color:colorRange(0.5)},
+      {text:"Pending", color:colorRange(1)}
+    ];
+
+    layers = layers.transpose();
+
+    for(var i=0; i<layers.length; i++) {
+      layers[i].color = colorRange(i/layers.length);
+    }
+
     var $cs = $('#capacity-stream');
-    $cs.stream('update', { data: layers.transpose()});
+    $cs.stream('update', { data: layers, yLabel: "Containers", legend: legend});
     removeSpinner($cs);
   });
 }

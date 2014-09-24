@@ -53,6 +53,7 @@ import org.apache.log4j.Logger;
 
 
 /**
+ * REST API to load a full job history file as a json object.
  *
  * @author dweeks
  */
@@ -96,7 +97,17 @@ public class TraceService implements ServletContextListener {
         
         log.info("Trace Service Destroyed");
     }
-  
+
+    /**
+     * Returns a json object representing the job history.
+     *
+     * @param jobId
+     * @param path Use the given path as opposed to the history locator
+     * @param summary Return just the top level details of the job
+     * @param counters Include counters
+     * @return Json string
+     * @throws Exception
+     */
     @Path("load/{jobId}")
     @GET
     @Produces("application/json")
@@ -155,20 +166,5 @@ public class TraceService implements ServletContextListener {
         
         return mapper.writeValueAsString(loader.getJob());
     }
-    
-    @Path("counters/{jobId}")
-    @GET
-    @Produces("application/json")
-    public String counters(@PathParam("jobId") final String jobId) {
-    	
-    	
-    	return null;
-    }
-    
-    @Path("archive/{jobId}")
-    @PUT
-    @Produces("application/json")
-    public void archive() {
-        
-    }
+
 }

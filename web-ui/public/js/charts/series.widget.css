@@ -31,3 +31,14 @@ root {
 .tipsy-inner {
     text-align: left;
 }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.multiselect {
+    margin-right: 5px;
+}

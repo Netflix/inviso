@@ -21,6 +21,7 @@ package com.netflix.bdp.inviso.history.job;
 
 import java.util.HashMap;
 /**
+ * Container for json marshalling.
  *
  * @author dweeks
  */

@@ -17,7 +17,7 @@
  */
 $(function(){
   d3.select('body').on('click', function() {
-    if(stickyTooltip != null) {
+    if(window.stickyTooltip != null) {
       $(stickyTooltip).tipsy('hide');
       stickyTooltip = null;
     }

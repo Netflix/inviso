@@ -20,10 +20,15 @@ _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 };
 
-
-window.settings = {};
-window.settings.defaultCluster = 'bdp_h2prod';
-window.settings.directHistoryPath = true;
+window.settings = {
+  directHistoryPath: true,
+  cluster: {
+    max: 50,
+    default: 'cluster_1',
+    applicationLookback: 60*60*1000,
+    capacityLookback: 3*24*60*60*1000
+  }
+};
 
 function initElasticSearch(callback) {
   elasticSearchUrl = 'http://' + window.location.hostname + ':9200/inviso/config/';

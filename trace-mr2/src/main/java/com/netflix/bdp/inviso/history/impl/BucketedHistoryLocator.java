@@ -36,7 +36,7 @@ public class BucketedHistoryLocator implements HistoryLocator {
 	public void initialize(Configuration config) throws Exception {
 		this.conf = config;
 		
-		bucketedPath = new Path(conf.get("inviso.history.location", "s3n://netflix-inviso/history2"));
+		bucketedPath = new Path(conf.get("inviso.history.location", "hdfs://tmp"));
 		configPostfix = conf.get("inviso.history.location.postfix", ".conf.gz");
 		historyPostfix = conf.get("inviso.history.location.postfix", ".history.gz");
 	}

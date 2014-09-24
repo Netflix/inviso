@@ -57,6 +57,7 @@ import org.apache.hadoop.mapred.JobHistory;
 import org.apache.log4j.Logger;
 
 /**
+ * REST API to load a full job history file as a json object.
  *
  * @author dweeks
  */
@@ -137,8 +138,7 @@ public class TraceService implements ServletContextListener {
         //Attempt
         JavaType attemptMapType = MapLikeType.construct(TaskAttempt.class, SimpleType.construct(String.class), SimpleType.construct(Object.class));        
         module.addSerializer(TaskAttempt.class, MapSerializer.construct(ignore, attemptMapType, false, null, null, null, null));
-        
-        //TODO: Exclude counters for large jobs
+
         if(!counters) {
             mapper.registerModule(module);
         }
@@ -150,19 +150,4 @@ public class TraceService implements ServletContextListener {
         return mapper.writeValueAsString(loader.getJob());
     }
     
-    @Path("counters/{jobId}")
-    @GET
-    @Produces("application/json")
-    public String counters(@PathParam("jobId") final String jobId) {
-    	
-    	
-    	return null;
-    }
-    
-    @Path("archive/{jobId}")
-    @PUT
-    @Produces("application/json")
-    public void archive() {
-        
-    }
 }

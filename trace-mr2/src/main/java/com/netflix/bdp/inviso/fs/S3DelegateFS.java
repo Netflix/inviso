@@ -29,6 +29,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.s3native.NativeS3FileSystem;
 
 /**
+ * Delegate for NativeS3FileSystem
  *
  * @author dweeks
  */
@@ -46,6 +47,5 @@ public class S3DelegateFS extends DelegateToFileSystem {
     public void checkPath(Path path) {
         //bypass
     }
-    
-    
+
 }

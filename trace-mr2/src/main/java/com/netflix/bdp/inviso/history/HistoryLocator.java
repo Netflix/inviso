@@ -26,6 +26,7 @@ import org.apache.hadoop.fs.Path;
 
 
 /**
+ * Interface to abstract where job history files are located.
  *
  * @author dweeks
  */

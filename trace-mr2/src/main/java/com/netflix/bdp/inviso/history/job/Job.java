@@ -24,6 +24,7 @@ import java.util.Map;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
+ * Container for json marshalling.
  *
  * @author dweeks
  */

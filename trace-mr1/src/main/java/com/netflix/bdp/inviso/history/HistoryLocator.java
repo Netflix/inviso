@@ -24,13 +24,21 @@ import org.apache.hadoop.fs.Path;
 
 
 /**
+ * Interface to abstract where job history files are located.
  *
  * @author dweeks
  */
 public interface HistoryLocator {
     
     void initialize(Configuration config) throws Exception;
-    
+
+    /**
+     * Return a pair of job history file and job config file.
+     *
+     * @param jobId
+     * @return
+     * @throws Exception
+     */
     Pair<Path, Path> locate(String jobId) throws Exception;
     
     void close() throws Exception;
