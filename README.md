@@ -99,7 +99,7 @@ An alternate way of starting the inviso project would be via docker.  If you alr
 docker run -d -p 8080:8080 savaki/inviso
 ```
 
-This will launch inviso in your container running on port 8080
+This will launch inviso in your container running on port 8080.
 
 Enjoy!
 
