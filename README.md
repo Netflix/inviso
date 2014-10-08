@@ -90,3 +90,16 @@ configure Inviso on the NameNode/ResourceManager host.
   ```
 
 7. Navigate to http://hostname:8080/
+
+# QuickStart - Docker Version
+
+An alternate way of starting the inviso project would be via docker.  If you already have docker installed, you can run the following command:
+
+```
+docker run -d -p 8080:8080 savaki/inviso
+```
+
+This will launch inviso in your container running on port 8080
+
+Enjoy!
+
