@@ -226,6 +226,11 @@ body {
   margin-left: 0;
 }
 
+#capacity-dateline {
+  width: 100%;
+  height: 50px;
+}
+
 #scheduler-stream {
   width: 100%;
   height: 600px;

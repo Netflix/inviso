@@ -20,7 +20,7 @@
 
   $.widget( "inviso.stream", {
     options: {
-      margin: { top: 20, right: 0, bottom: 20, left: 115 },
+      margin: { top: 20, right: 0, bottom: 40, left: 115 },
       title: null,
       series: {},
       offset: "wiggle",
@@ -30,6 +30,7 @@
       yLabel: '',
       filter: _.identity,
       brush: false,
+      timeFormat: 'YYYY-MM-DD HH:mm:ss (UTC ZZ)',
       color: function(d) {
         if(this.c === undefined) {
           this.c = d3.scale.linear().range(["#90cde7", "#2d4fca"]);
@@ -62,12 +63,10 @@
         .attr("height", this.height);
 
       this.chart = this.svg.append("g")
-        .attr("class", "stream-chart")
-        .attr("transform", "translate("+m.left+","+m.top+")");
+        .attr("class", "stream-chart");
 
       this.title = this.svg.append('g')
-        .attr("class", "chart-title")
-        .attr("transform", "translate("+(m.left+10)+","+m.top+")");
+        .attr("class", "chart-title");
 
       //X-Axis
       this.x = this.options.scale.x()
@@ -77,16 +76,15 @@
       this.xAxis = d3.svg.axis()
         .scale(this.x)
         .ticks(this.width/300)
-        .tickFormat(function(d){ return moment(d).format('YYYY-MM-DD HH:mm:ss (UTC ZZ)'); })
+        .tickFormat(function(d){ return moment(d).format(self.options.timeFormat); })
         .orient("bottom");
 
       this.svg.append('g')
         .attr("class","x axis")
-        .attr("transform", "translate("+m.left+"," + (this.height - m.bottom) + ")")
         .call(this.xAxis);
 
-      this.xLabel = this.svg.append('g')
-        .attr('transform', 'translate('+(this.width-m.right-m.left)/2+','+self.height+')');
+      this.xLabel = this.svg.append('g');
+
       this.xLabel
         .append('text')
         .attr('class', 'x-label')
@@ -103,11 +101,10 @@
 
       this.svg.append('g')
         .attr("class","y axis")
-        .attr("transform", "translate("+m.left+","+m.top+")")
         .call(this.yAxis);
 
-      this.yLabel = this.svg.append('g')
-        .attr('transform', 'translate(20,'+(self.height -m.top -m.bottom)/2+') rotate(-90)');
+      this.yLabel = this.svg.append('g');
+
       this.yLabel.append('text')
         .attr('class', 'y-label')
         .text(this.options.yLabel);
@@ -121,21 +118,87 @@
         .text(this.options.title);
       }
 
-      var resize = _.debounce(function(){
-        self.width = $e.width();
-        self.height = $e.height();
+      // Time Tracer
+      this.tracer = this.svg.append('g')
+        .attr("class", "time tracer");
+      this.tracerText = this.tracer.append('text')
+        .text('');
+      this.tracerX = this.tracer.append('line')
+        .attr({
+          class:'tracer x',
+          x1: 0,
+          x2: 0,
+          y1: 0,
+          y2: -20,
+          style: "stroke:#686868;stroke-width:1"
+        });
 
-        self.svg
-          .attr("width", self.width)
-          .attr("height", self.height);
+      this.svg.on('mousemove', function(){
+        var e = d3.event;
+
+        var t = self.x.invert(e.x - m.left - $(this).offset().left);
+
+        if(t < self.x.domain()[0])
+          return;
+
+        self.tracerText.text(moment(t).format(self.options.timeFormat));
+        var offset = self.tracerText.node().getBBox().width/2;
+        self.tracerText.attr({
+          'x': -offset,
+          'y': 15
+          });
+
+        self.tracer.attr('transform', 'translate('+(e.x-$(this).offset().left)+', '+ (self.height - m.bottom + 20) +')');
+
+      }).on('mouseout', function() {
+        self.svg.select('.tracer').style('display', 'none');
+      }).on('mouseover', function() {
+        self.svg.select('.tracer').style('display','block');
+      });
+
+      this._updateLayout();
+
+      //Resize operation
+      var resize = _.debounce(function(){
         $e.stream('update');
       }, 500);
       $(window).on('resize', resize);
     },
 
+    _updateLayout: function() {
+      var self = this;
+      var $e = $(this.element);
+      var m = this.options.margin;
+
+      this.width = $e.width();
+      this.height = $e.height();
+
+      this.svg
+        .attr("width", self.width)
+        .attr("height", self.height);
+
+      this.chart.attr("transform", "translate("+m.left+","+m.top+")");
+      this.title.attr("transform", "translate("+(m.left+10)+","+m.top+")");
+      this.xLabel.attr('transform', 'translate('+(this.width-m.right-m.left)/2+','+self.height+')');
+      this.yLabel.attr('transform', 'translate(20,'+(this.height -m.top -m.bottom)/2+') rotate(-90)');
+
+
+
+      this.svg.select('.x.axis').attr("transform", "translate("+m.left+"," + (this.height - m.bottom) + ")");
+      this.svg.select('.y.axis').attr("transform", "translate("+m.left+","+m.top+")");
+    },
+
     update: function(series) {
+      this._updateLayout();
+
       if(series == null) {
         series = this.series;
+      } else {
+        //reset the brush
+        if(this.brush != null) {
+          this.brush.clear();
+          this.brushg.call(this.brush);
+        }
       }
 
       if(_.isEmpty(series.data)) {
@@ -201,9 +264,6 @@
             $(this).tipsy('show');
           })
           .on("mousemove", function(d){
-            var data = _.last(_.filter(_.flatten(d), function(v) { return v.id != null; }));
-
-            $(this).tipsy('setTitle', self.options.tooltip(data));
           })
           .on("mouseout", function(d){
             $(this).tipsy('hide');
@@ -230,10 +290,7 @@
 
       this.xAxis.ticks(this.width/300);
 
-      this.svg.selectAll('.x.axis')
-        .attr("transform", "translate("+m.left+"," + (this.height - m.bottom) + ")")
-        .call(this.xAxis);
-
+      this.svg.selectAll('.x.axis').call(this.xAxis);
       this.svg.select('x-label').text(this.series.xLabel || this.options.xLabel);
 
       var max = d3.max(layers, function(layer) { return d3.max(layer, function(d) { return d.y0 + d.y; }); });
@@ -428,6 +485,11 @@
     },
 
     refresh: function() {
+    },
+
+    clear: function() {
+      this.series = null;
+      this.chart.selectAll("path").remove();
     },
 
   });

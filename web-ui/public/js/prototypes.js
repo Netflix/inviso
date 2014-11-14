@@ -24,6 +24,10 @@ String.prototype.startsWith = function(it) {
   return this.indexOf(it) === 0;
 };
 
+Array.prototype.isEmpty = function () {
+    return this.length === 0;
+};
+
 Array.prototype.extend = function (other) {
     other.forEach(function(v) {this.push(v);}, this);
     return this;
@@ -60,4 +64,8 @@ Array.prototype.chunk = function(chunkSize) {
   for (var i=0; i<this.length; i+=chunkSize)
     R.push(this.slice(i,i+chunkSize));
   return R;
+};
+
+Array.prototype.contains = function(v) {
+  return this.indexOf(v) != -1;
 };

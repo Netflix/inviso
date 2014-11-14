@@ -96,7 +96,7 @@ function addChart(data) {
   }
 
   if(workflow === null) {
-    workflow = function(){
+    workflow = new function(){
       var self = this;
       this.id = workflowId;
       this.name = data.name;
@@ -107,7 +107,7 @@ function addChart(data) {
       });
 
       return this;
-    }();
+    };
 
     inviso.workflows.push(workflow);
   }

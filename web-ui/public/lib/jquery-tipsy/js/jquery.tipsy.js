@@ -77,7 +77,9 @@
                 if(this.options.track) {
                   var _this = this;
                   $('body').mousemove(function(event){
-                    $tip.css({top: event.pageY + _this.options.offset + pos.height, left: event.pageX - actualWidth / 2});
+                    if(_this.options.track) {
+                      $tip.css({top: event.pageY + _this.options.offset + pos.height, left: event.pageX - actualWidth / 2});
+                    }
                   });
                 }
 
@@ -116,7 +118,6 @@
         getTitle: function() {
             var title, $e = this.$element, o = this.options;
             this.fixTitle();
-            var title, o = this.options;
             if (typeof o.title == 'string') {
                 title = $e.attr(o.title == 'title' ? 'original-title' : o.title);
             } else if (typeof o.title == 'function') {
@@ -126,8 +127,8 @@
             return title || o.fallback;
         },
 
-        setTitle: function(value) {
-          //no-op
+        track: function(toggle) {
+          this.options.track = toggle;
         },
 
         tip: function() {

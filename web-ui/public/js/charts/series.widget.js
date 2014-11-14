@@ -34,8 +34,6 @@ $(function(){
 
     options: {
       margin: {top: 20, right: 40, bottom: 80, left: 80},
-      // maxWidth: 400,
-      // minHeight: 400,
       barHeight: 1,
       animateLimit: 2000,
       scaled: false,
@@ -326,6 +324,7 @@ $(function(){
         .attr({
           x: function(d) { return o.flat? 0 :x(d.start); },
           y: function(d, i) { return i * o.barHeight; },
+          width: function(d) { return Math.max(x(d.stop) - x(d.start), 1); },
           height: o.barHeight,
           fill: o.color
         });

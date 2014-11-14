@@ -96,7 +96,7 @@ class MapReduceBase extends Application
       dataType: 'json'
       success: (traceData) =>
         jobDetails=
-          workflowId: null
+          workflowId: traceData.workflowId
           id: @getId(traceData)
           name: @getName(traceData)
           type: 'trace'
@@ -177,9 +177,11 @@ class MapReduceBase extends Application
           ).append($('<img/>', {src: 'img/hadoop.gif', class: 'hadoop-icon'}))
           $td.append($('<div/>').append($a))
         if 'genie_id' of r
-          version = if r.genie_version then r.genie_version else ''
+          linkVersion = if r.genie_version then r.genie_version else ''
+          apiVersion = if r.genie_version then r.genie_version else 0
+
           $a = $('<a/>',
-            href: "http://go/genie#{version}-prod/genie/v0/jobs/#{r.genie_id}"
+            href: "http://go/genie#{linkVersion}-prod/genie/v#{apiVersion}/jobs/#{r.genie_id}"
             target: "_blank"
           ).append($('<img/>', {src: 'img/genie.gif', class: 'genie-icon'}))
           $td.append($('<div/>').append($a))

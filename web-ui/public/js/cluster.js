@@ -43,10 +43,10 @@ function initClusterView() {
 
 function loadSelectedCluster() {
   var $clusterSelect = $('#cluster-select');
-  createSpinner($('#application-stream'));
+  $('#application-stream').spin();
   loadAppData($clusterSelect.val());
 
-  createSpinner($('#capacity-stream'));
+  $('#capacity-stream').spin();
   loadCapacityStream($clusterSelect.val());
 }
 
@@ -86,11 +86,16 @@ function getClusters() {
       var clusters = _.reduce(result.aggregations.clusters.buckets, function(m,v){m.push(v.key); return m;}, []);
 
       _.each(clusters.sort(), function(v) {
-        $clusterSelect.append($("<option>"+v+"</option>"));
+        $clusterSelect.append($("<option value=\""+v+"\">"+v+"</option>"));
       });
 
       $clusterSelect.selectpicker('refresh');
-      loadSelectedCluster();
+
+      if(clusters.contains(settings.cluster.default)) {
+        $clusterSelect.selectpicker('val', settings.cluster.default);
+      }else {
+        loadSelectedCluster();
+      }
     },
     function(error){
       console.log(error);
@@ -120,8 +125,18 @@ function initCharts() {
     var start = data.range[0];
     var stop = data.range[1];
 
-    createSpinner($('#application-stream'));
+    $('#application-stream').spin();
     loadAppData($('#cluster-select').val(), start, stop);
+  });
+
+  $('#capacity-dateline').dateline().bind('datelinebrush', function(event, data){
+    var start = +data.range[0];
+    var stop = +data.range[1];
+
+    $('#application-stream').stream('clear');
+
+    $('#capacity-stream').spin();
+    loadCapacityStream($('#cluster-select').val(), start, stop);
   });
 
   $("#highlight").keyup(function(event){
@@ -159,6 +174,12 @@ function scrollSearch(type, cluster, includes, start, stop, callback) {
     searcyType: 'scan',
     scroll: '10s'
   }).then(function scroll_all(response) {
+    if(response.hits.total > 20000) {
+      alert('Too many data points.  Please select a smaller range.');
+      callback([]);
+      return;
+    }
+
     response.hits.hits.forEach(function (hit) {
       items.push(hit._source);
     });
@@ -278,7 +299,7 @@ function loadAppData(cluster, start, stop, includes) {
     });
 
     update();
-    removeSpinner($as);
+    $as.spin(false);
   });
 }
 
@@ -327,7 +348,9 @@ function loadCapacityStream(cluster, start, stop) {
       {text:"Pending", color:colorRange(1)}
     ];
 
-    layers = layers.transpose();
+    if(!layers.isEmpty()) {
+      layers = layers.transpose();
+    }
 
     for(var i=0; i<layers.length; i++) {
       layers[i].color = colorRange(i/layers.length);
@@ -335,6 +358,6 @@ function loadCapacityStream(cluster, start, stop) {
 
     var $cs = $('#capacity-stream');
     $cs.stream('update', { data: layers, yLabel: "Containers", legend: legend});
-    removeSpinner($cs);
+    $cs.spin(false);
   });
 }
