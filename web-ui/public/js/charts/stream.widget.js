@@ -159,11 +159,6 @@
           var e = d3.event;
 
           updateTracer(e, this);
-        })
-        .on('mouseout', function() {
-          self.svg.select('.tracer').style('display', 'none');
-        }).on('mouseover', function() {
-          self.svg.select('.tracer').style('display','block');
         });
 
       this._updateLayout();
