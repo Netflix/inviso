@@ -33,7 +33,7 @@ function processProfilerQueryParams() {
     elasticSearchGet(jobId, function(result){
       var data = result._source;
       data.id = result._id;
-      var app = apps[data['mapreduce.version'] || 'mr1'];
+      var app = inviso.apps[data['mapreduce.version'] || 'mr1'];
 
       incrementLoading();
       app.load(data, function() {decrementLoading();});
@@ -48,7 +48,7 @@ function processProfilerQueryParams() {
         var data = hit._source;
         data.id = hit._id;
 
-        var app = apps[data['mapreduce.version'] || 'mr1'];
+        var app = inviso.apps[data['mapreduce.version'] || 'mr1'];
 
         incrementLoading();
         app.load(data, function() {decrementLoading();});

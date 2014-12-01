@@ -19,8 +19,16 @@
 var es_client = null;
 
 function initClusterView() {
-  $('.navbar-nav .active').removeClass('active');
-  $('.nav-cluster').addClass('active');
+  if(inviso.cluster.initialized) {
+    return;
+  } else {
+    inviso.cluster.initialized = true;
+  }
+
+  inviso.cluster.selected.subscribe(function() {
+    $('#capacity-dateline').dateline('reset')
+    loadSelectedCluster();
+  });
 
   var $clusterSelect = $('#cluster-select');
   $clusterSelect.selectpicker();
@@ -36,23 +44,30 @@ function initClusterView() {
     getClusters();
   });
 
-  $clusterSelect.on('change', loadSelectedCluster);
+  $clusterSelect.on('change', function() {
+    inviso.cluster.selected($(this).val());
+  });
 
   initCharts();
+}
+
+function focusCluster() {
+  $('.navbar-nav .active').removeClass('active');
+  $('.nav-cluster').addClass('active');
 }
 
 function loadSelectedCluster() {
   var $clusterSelect = $('#cluster-select');
   $('#application-stream').spin();
-  loadAppData($clusterSelect.val());
+  loadAppData(inviso.cluster.selected());
 
   $('#capacity-stream').spin();
-  loadCapacityStream($clusterSelect.val());
+  loadCapacityStream(inviso.cluster.selected());
 }
 
 function getClusters() {
   es_client.search({
-    index: 'inviso-cluster',
+    index: settings.cluster.index,
     type: 'metrics',
     size: 0,
     body: {
@@ -94,7 +109,7 @@ function getClusters() {
       if(clusters.contains(settings.cluster.default)) {
         $clusterSelect.selectpicker('val', settings.cluster.default);
       }else {
-        loadSelectedCluster();
+        inviso.cluster.selected($('cluster-select').val());
       }
     },
     function(error){
@@ -107,14 +122,10 @@ function initCharts() {
   $('#application-stream').stream({
     offset:'zero',
     tooltip: function(d) {
-      var content =
-        '<div>'+
-        ((d.user)?'<span>User: {{user}}</span><br>':'')+
-        ((d.appId)?'<span>App Id: {{appId}}</span><br>':'')+
-        ((d.queue)?'<span>Queue: {{queue}}':'')+
-        '</div>';
+      var data = _.last(_.filter(_.flatten(d), function(v) { return v.id != null; }));
+      data.config = d.config;
 
-      return _.template(content, d);
+      return inviso.cluster.tooltip.app(data);
     }
   });
 
@@ -126,7 +137,7 @@ function initCharts() {
     var stop = data.range[1];
 
     $('#application-stream').spin();
-    loadAppData($('#cluster-select').val(), start, stop);
+    loadAppData(inviso.cluster.selected(), start, stop);
   });
 
   $('#capacity-dateline').dateline().bind('datelinebrush', function(event, data){
@@ -136,7 +147,7 @@ function initCharts() {
     $('#application-stream').stream('clear');
 
     $('#capacity-stream').spin();
-    loadCapacityStream($('#cluster-select').val(), start, stop);
+    loadCapacityStream(inviso.cluster.selected(), start, stop);
   });
 
   $("#highlight").keyup(function(event){
@@ -209,6 +220,9 @@ function loadAppData(cluster, start, stop, includes) {
     var groupings = {
       app: function() {
         var apps = _.groupBy(_.filter(data,function(app){return app.id != null;}), function(app) {return app.id; });
+        var jobIds = _.map(_.keys(apps),function(v){ return v.replace("application","job");});
+
+        var configMap = {};
 
         var layers = _.reduce(apps, function(m, app) {
           app.sort(function(a,b){return a.timestamp - b.timestamp;});
@@ -224,12 +238,48 @@ function loadAppData(cluster, start, stop, includes) {
               app[i].x = p;
               app[i].y = app[i][$('#metric').val()];
             }
+
             app[i].appId = id;
 
           });
+          configMap[id] = app;
+
           m.push(app);
           return m;
         }, []);
+
+        //Load the inviso data for apps
+        if(!jobIds.isEmpty()) {
+          es_client.mget({
+            index: settings.search.index,
+            type: 'config',
+            body: {
+              ids: jobIds
+            },
+            _sourceInclude: [
+              'mapred.job.id',
+              'mapred.job.start',
+              'mapred.job.stop',
+              'duration',
+              'genie.job.name',
+              'genie.job.id',
+              'mapreduce.job.maps',
+              'mapreduce.job.reduces',
+              'mapreduce.map.memory.mb',
+              'mapreduce.reduce.memory.mb'
+            ]
+          }, function(error, response) {
+            console.log(response);
+
+            _.each(response.docs, function(doc){
+              var id = doc._id.replace('job','application');
+
+              if(_.has(configMap, id)) {
+                configMap[id].config = doc._source;
+              }
+            });
+          });
+        }
 
         return layers;
       },

@@ -18,6 +18,10 @@
 
 class @Inviso
   constructor: (args) ->
+    @apps =
+        mr1: new MapReduce1()
+        mr2: new MapReduce2()
+
     @search =
       results: ko.observableArray([])
       index: 0
@@ -39,5 +43,16 @@ class @Inviso
       complete: ko.observable(0)
 
     @workflows = ko.observableArray([])
+
+    @cluster =
+      selected: ko.observable()
+      start: ko.observable()
+      end: ko.observable()
+      refresh: ko.observable(60000)
+      tooltip: {}
+
+    $.get('template/cluster-tooltip.html', (source) =>
+      @cluster.tooltip.app = Handlebars.compile(source);
+    )
 
   closeWorkflow: (workflow)->

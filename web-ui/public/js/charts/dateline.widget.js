@@ -21,6 +21,7 @@
   $.widget( "inviso.dateline", {
     options: {
       margin: { top: 0, right: 0, bottom: 30, left: 115},
+      extent: [moment().subtract(3,'days').toDate(), moment().toDate()],
       start: moment().subtract(30, 'days').toDate(),
       end: moment().toDate()
     },
@@ -40,7 +41,7 @@
 
       this.brush = d3.svg.brush()
         .x(this.x)
-        .extent([moment(o.end).subtract(3,'days').toDate(), o.end])
+        .extent(o.extent)
         .on("brushend", function() {
           self._brushend();
         });
@@ -125,6 +126,16 @@
 
     _brushend: function(){
       this._trigger( "brush", null, { range: this.brush.extent() } );
+    },
+
+    extent: function(extent) {
+      this.options.extent = extent;
+      this.reset();
+    },
+
+    reset: function() {
+      this.brush.extent(this.options.extent);
+      this.gBrush.call(this.brush);
     },
 
   });

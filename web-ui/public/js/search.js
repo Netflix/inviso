@@ -247,7 +247,7 @@ function extendSearch() {
 
 //Have to do this manually because KO is too slow.
 function appendSearchResults(r) {
-  var app = apps[r.version!=null?r.version:'mr1'];
+  var app = inviso.apps[r.version!=null?r.version:'mr1'];
 
   var $tr = $('<tr class="search-result"></tr>');
 

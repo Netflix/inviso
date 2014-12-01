@@ -22,7 +22,11 @@ _.templateSettings = {
 
 window.settings = {
   directHistoryPath: true,
+  search: {
+    index: 'inviso'
+  },
   cluster: {
+    index: 'inviso-cluster',
     max: 50,
     default: 'cluster_1',
     applicationLookback: 60*60*1000,

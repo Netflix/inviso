@@ -16,9 +16,7 @@
 #
 ##
 
-@apps =
-    mr1: new MapReduce1()
-    mr2: new MapReduce2()
+
 
 # Main
 $ ->
