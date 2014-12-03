@@ -49,6 +49,9 @@ class MapReduceBase extends Application
     Handlebars.registerHelper('logLink', (job, entry) ->
       return "<a class=\"log-link\" href=\"#{self.logLink(job, entry)}\" target=\"_blank\">Open Logs</a>"
     )
+    Handlebars.registerHelper('amLogLink', (job) ->
+      return "<a class=\"log-link\" href=\"#{self.amLogLink(job)}\" target=\"_blank\">Open Logs</a>"
+    )
     Handlebars.registerHelper('properties', (attempt) ->
       tbody = ''
 
@@ -305,6 +308,9 @@ class @MapReduce2 extends MapReduceBase
       submit_time: trace.submitTime,
       start_time: trace.launchTime,
       stop_time: trace.finishTime,
+      amContainer: trace.containerId,
+      amNode: trace.nodeManagerHost,
+      amPort: trace.nodeManagerPort
       entries: []
 
     for attemptId,attempt of trace.tasks.taskid.attempts
@@ -328,6 +334,16 @@ class @MapReduce2 extends MapReduceBase
     appId = job.id.replace('job', 'application');
     containerId = attempt.attempt.containerId;
     nodeId = attempt.attempt.hostname+':'+attempt.attempt.port;
+    fs = job.info['fs.defaultFS'];
+
+    return "/inviso/mr2/v0/log/load/#{owner}/#{appId}/#{containerId}/#{nodeId}?fs=#{fs}&root=#{root}";
+
+  amLogLink: (job) ->
+    root = job.info['yarn.nodemanager.remote-app-log-dir']
+    owner = job.data.username
+    appId = job.id.replace('job', 'application')
+    containerId = job.data.amContainer
+    nodeId = job.data.amNode+":"+job.data.amPort
     fs = job.info['fs.defaultFS'];
 
     return "/inviso/mr2/v0/log/load/#{owner}/#{appId}/#{containerId}/#{nodeId}?fs=#{fs}&root=#{root}";
