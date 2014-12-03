@@ -117,7 +117,7 @@
         <div data-bind="page: {id: 'search', role: 'start', beforeShow: initSearchPage, afterShow: focusSearch, afterHide: disableStandardSearch, source: 'page/search.html' }"></div>
 
         <!--Cluster-->
-        <div data-bind="page: {id: 'cluster', sourceLoaded: initClusterView, afterShow: focusCluster, source: 'page/cluster.html' }"></div>
+        <div data-bind="page: {id: 'cluster', sourceLoaded: initClusterView, afterShow: focusCluster, sourceOnShow: 'page/cluster.html' }"></div>
 
         <!--Profiler-->
         <div data-bind="page: {id: 'profiler', beforeShow: initProfilePage, source: 'page/profiler.html' }"></div>

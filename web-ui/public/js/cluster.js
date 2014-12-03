@@ -19,16 +19,16 @@
 var es_client = null;
 
 function initClusterView() {
-  if(inviso.cluster.initialized) {
-    return;
-  } else {
+  if(!inviso.cluster.initialized) {
+    inviso.cluster.selected.subscribe(function() {
+      $('#capacity-dateline').dateline('reset')
+      loadSelectedCluster();
+    });
+
     inviso.cluster.initialized = true;
   }
 
-  inviso.cluster.selected.subscribe(function() {
-    $('#capacity-dateline').dateline('reset')
-    loadSelectedCluster();
-  });
+
 
   var $clusterSelect = $('#cluster-select');
   $clusterSelect.selectpicker();
@@ -45,7 +45,11 @@ function initClusterView() {
   });
 
   $clusterSelect.on('change', function() {
-    inviso.cluster.selected($(this).val());
+    if($(this).val() == inviso.cluster.selected()) {
+      inviso.cluster.selected.valueHasMutated();
+    } else {
+      inviso.cluster.selected($(this).val());
+    }
   });
 
   initCharts();

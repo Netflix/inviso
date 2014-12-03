@@ -103,7 +103,7 @@ function addChart(data) {
       this.jobs = ko.observableArray([]);
       this.sortedJobs = ko.computed(function(){
         self.jobs.sort(function(l,r){return l.data.start - r.data.start;});
-        return self.jobs;
+        return self.jobs();
       });
 
       return this;

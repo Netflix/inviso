@@ -251,8 +251,6 @@ $(function(){
           return d.id;
       });
 
-      $e.hide();
-
       //enter
       selection.enter()
         .append('rect')
@@ -331,7 +329,6 @@ $(function(){
 
       //exit
       selection.exit().remove();
-      $e.show();
     },
 
     _tooltip: function(elem, series, d) {
