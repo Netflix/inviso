@@ -113,7 +113,7 @@ function getClusters() {
       if(clusters.contains(settings.cluster.default)) {
         $clusterSelect.selectpicker('val', settings.cluster.default);
       }else {
-        inviso.cluster.selected($('cluster-select').val());
+        inviso.cluster.selected($clusterSelect.val());
       }
     },
     function(error){
