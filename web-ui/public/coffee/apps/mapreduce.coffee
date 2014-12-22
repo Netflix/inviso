@@ -90,7 +90,7 @@ class MapReduceBase extends Application
 
     url = "/inviso/#{@version}/v0/trace/load/#{job.id}?counters=true"
 
-    if settings.directHistoryPath
+    if settings.directHistoryPath or job.incremental
       url += "&path=#{encodeURIComponent(job['history.uri'])}"
 
     $.ajax

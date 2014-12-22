@@ -48,6 +48,7 @@ var searchFields = [
   { label: 'Mapreduce Version', id: 'version', fields: ['mapreduce.version'], active: true},
   { label: 'Default FS', id: 'fs', fields: ['fs.defaultFS'], active: false },
   { label: 'History URI', id: 'history_uri', fields: ['history.uri'], active: false },
+  { label: 'Incremental', id: 'incremental', fields: ['incremental'], active: false },
   { label: 'Log Agg Dir', id: 'log_dir', fields: ['yarn.nodemanager.remote-app-log-dir'], active: false }
 ];
 

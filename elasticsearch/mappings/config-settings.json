@@ -21,6 +21,12 @@
         "default" : "90d"
       }
     },
+    "tracking" : {
+      "_timestamp" : {
+        "enabled" : true,
+        "store" : true
+      }
+    },
     "config" : {
       "_timestamp" : {
         "enabled" : true,
