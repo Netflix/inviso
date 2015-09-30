@@ -10,7 +10,7 @@ Inviso is a lightweight tool that provides the ability to search for Hadoop jobs
 **ElasticSearch:** Search over jobs and correlate Hadoop jobs for Pig and Hive scripts.
 
 **Python Scripts:** Scripts to index job configurations into ElasticSearch for
-querying.  These scripts can accomodate a pub/sub model for use with SQS or some
+querying.  These scripts can accommodate a pub/sub model for use with SQS or some
 other queuing service to better distribute the load or allow other systems to know
 about job events.
 
