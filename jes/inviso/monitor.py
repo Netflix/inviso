@@ -17,10 +17,14 @@ EPOCH = datetime(1970, 1, 1, tzinfo=pytz.UTC)
 
 
 class Cluster:
-    def __init__(self, id, name, host):
+    def __init__(self, id, name, host, port,namenode,namenode_port,history_server):
         self.id = id
         self.name = name
         self.host = host
+	self.port = port
+	self.namenode = namenode
+	self.namenode_port = namenode_port
+	self.history_server = history_server
 
 class Monitor(object):
     def __init__(self, publisher=None, **kwargs):
@@ -286,7 +290,6 @@ class HdfsMr2LogMonitor(ElasticSearchMonitor):
         self.host = host
         self.port = port
         self.log_path = log_path
-
     def run(self):
         c = Client(self.host, self.port)
 
