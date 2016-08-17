@@ -23,8 +23,9 @@ class Cluster:
         self.host = host
 
 class Monitor(object):
-    def __init__(self, publisher=None, **kwargs):
+    def __init__(self, publisher=None, chunk_size=10, **kwargs):
         self.publisher = publisher
+        self.chunk_size = chunk_size
     
     def run(self):
         raise NotImplementedError("Subclass to Implement")
@@ -177,7 +178,7 @@ class S3Mr1LogMonitor(TimestampMonitor):
 
     def run(self):
         listing = self.emr_logs.list(prefix=self.prefix, delimiter="/")
-
+        events = []
         for f in listing:
             path = f.name
 
@@ -208,8 +209,9 @@ class S3Mr1LogMonitor(TimestampMonitor):
                 'epoch': int((ts - EPOCH).total_seconds()) * 1000,
                 'mapreduce.version': 'mr1'
             }
-
-            self.publisher.publish([event])
+            events.append(event)
+        for chunk in [events[i:i + self.chunk_size] for i in xrange(0, len(events), self.chunk_size)]:
+            self.publisher.publish(chunk)
 
 
 class S3Mr2LogMonitor(ElasticSearchMonitor):
@@ -227,7 +229,7 @@ class S3Mr2LogMonitor(ElasticSearchMonitor):
 
     def run(self):
         listing = self.emr_logs.list(prefix=self.prefix, delimiter="/")
-
+        events = []
         for f in listing:
             path = f.name
 
@@ -266,7 +268,9 @@ class S3Mr2LogMonitor(ElasticSearchMonitor):
             }
 
             log.info('Publishing event: (%s) %s ' % (event['cluster'], event['job.id']))
-            self.publisher.publish([event])
+            events.append(event)
+        for chunk in [events[i:i + self.chunk_size] for i in xrange(0, len(events), self.chunk_size)]:
+            self.publisher.publish(chunk)
 
 
 class HdfsMr2LogMonitor(ElasticSearchMonitor):
@@ -291,7 +295,7 @@ class HdfsMr2LogMonitor(ElasticSearchMonitor):
         c = Client(self.host, self.port)
 
         listing = c.ls([self.log_path], recurse=True)
-
+        events = []
         for f in listing:
             path = f['path']
 
@@ -330,4 +334,6 @@ class HdfsMr2LogMonitor(ElasticSearchMonitor):
             }
 
             log.info('Publishing event: (%s) %s %s' % (event['cluster'], event['job.id'], ts))
-            self.publisher.publish([event])
+            events.append(event)
+        for chunk in [events[i:i + self.chunk_size] for i in xrange(0, len(events), self.chunk_size)]:
+            self.publisher.publish(chunk)
