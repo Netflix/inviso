@@ -230,9 +230,9 @@
       $(target).tipsy({
         trigger: 'manual',
         gravity: function() {
-          if(window.event.pageX < $(window).width() / 6) {
+          if(target.pageX < $(window).width() / 6) {
             return 'nw';
-          } else if(window.event.pageX > $(window).width() * 5 / 6) {
+          } else if(target.pageX > $(window).width() * 5 / 6) {
             return 'ne';
           } else {
             return 'n';
