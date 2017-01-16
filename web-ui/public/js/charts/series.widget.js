@@ -228,6 +228,7 @@ $(function(){
 
 
       this.legend.attr('transform', function(d) {
+        if (!o.showLegend) { return; }
         var xpos = self.width - o.margin.right - this.getBBox().width;
         var ypos = o.margin.top;
         return 'translate('+xpos+','+ypos+')';
