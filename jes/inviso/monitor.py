@@ -17,10 +17,12 @@ EPOCH = datetime(1970, 1, 1, tzinfo=pytz.UTC)
 
 
 class Cluster:
-    def __init__(self, id, name, host):
+    def __init__(self, id, name, host, namenode_rpc_port, resourcemanager_webapp_port):
         self.id = id
         self.name = name
         self.host = host
+        self.namenode_rpc_port = namenode_rpc_port
+        self.resourcemanager_webapp_port = resourcemanager_webapp_port
 
 class Monitor(object):
     def __init__(self, publisher=None, chunk_size=10, **kwargs):
