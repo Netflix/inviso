@@ -228,6 +228,7 @@ $(function(){
 
 
       this.legend.attr('transform', function(d) {
+        if (!o.showLegend) { return; }
         var xpos = self.width - o.margin.right - this.getBBox().width;
         var ypos = o.margin.top;
         return 'translate('+xpos+','+ypos+')';
@@ -335,7 +336,7 @@ $(function(){
       $(elem).tipsy({
         trigger: 'manual',
         gravity: function(){
-            if (window.event.pageX < $(window).width()/2) {
+            if (d3.event.pageX < $(window).width()/2) {
                 return 'w';
             } else {
                 return 'e';
