@@ -11,6 +11,7 @@ from inviso.publish import DirectPublisher
 from snakebite import channel
 from snakebite.channel import log_protobuf_message
 from snakebite.protobuf.IpcConnectionContext_pb2 import IpcConnectionContextProto
+from inviso.conf_reader import getConfElement
 
 log = util.get_logger("inviso-settings")
 
@@ -18,7 +19,7 @@ log = util.get_logger("inviso-settings")
 def create_hadoop_connection_context(self):
     '''Creates and seriazlies a IpcConnectionContextProto (not delimited)'''
     context = IpcConnectionContextProto()
-    context.userInfo.effectiveUser = 'hadoop'
+    context.userInfo.effectiveUser = getConfElement('cluster','effective_user')
     context.protocol = "org.apache.hadoop.hdfs.protocol.ClientProtocol"
 
     s_context = context.SerializeToString()
@@ -60,12 +61,12 @@ def inviso_trace(job_id, uri, version='mr1', summary=True):
     
     return response.json()
 
-inviso_host = 'localhost:8080'
-genie_host = 'localhost:8080'
-elasticsearch_hosts = [{'host': 'localhost', 'port': 9200}]
+inviso_host = getConfElement('inviso','inviso_host')
+genie_host = getConfElement('inviso','genie_host')
+elasticsearch_hosts = [{'host': getConfElement('elastic_search','host'), 'port': int(getConfElement('elastic_search','port'))}]
 elasticsearch = Elasticsearch(elasticsearch_hosts)
 clusters = [
-    Cluster(id='cluster_1', name='cluster_1', host=socket.getfqdn())
+    Cluster(id=getConfElement('cluster','cluster_id'), name=getConfElement('cluster','cluster_name'), host=socket.getfqdn(getConfElement('cluster','resource_manager')), port=getConfElement('cluster','resource_manager_port'),namenode=getConfElement('cluster','namenode'),namenode_port=int(getConfElement('cluster','namenode_port')),history_server=getConfElement('cluster','history_server_dir'))
 ]
 
 handler = IndexHandler(trace=inviso_trace, elasticsearch=elasticsearch)

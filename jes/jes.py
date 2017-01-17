@@ -26,7 +26,9 @@ def main():
         monitors.append(HdfsMr2LogMonitor(jobflow=cluster.id,
                                           cluster_id=cluster.id, 
                                           cluster_name=cluster.name, 
-                                          host=cluster.host,
+                                          host=cluster.namenode,
+					  port=cluster.namenode_port,
+					  log_path=cluster.history_server,
                                           publisher=publisher,
                                           elasticsearch=settings.elasticsearch))
     
