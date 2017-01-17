@@ -336,7 +336,7 @@ $(function(){
       $(elem).tipsy({
         trigger: 'manual',
         gravity: function(){
-            if (elem.pageX < $(window).width()/2) {
+            if (d3.event.pageX < $(window).width()/2) {
                 return 'w';
             } else {
                 return 'e';
