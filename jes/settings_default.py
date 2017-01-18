@@ -69,8 +69,8 @@ clusters = [
       id='cluster_1',
       name='cluster_1',
       host=socket.getfqdn(),
-      namenode_rpc_port = 9000,
-      resourcemanager_webapp_port = 9026
+      namenode_rpc_port = 8020,
+      resourcemanager_webapp_port = 8088
     )
 ]
 
