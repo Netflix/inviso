@@ -18,7 +18,7 @@ WORKDIR /opt
 # install tomcat
 #
 ENV TOMCAT_VERSION 7.0.56
-RUN wget -qq http://mirror.nexcess.net/apache/tomcat/tomcat-7/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz ; \
+RUN wget -qq https://archive.apache.org/dist/tomcat/tomcat-7/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz ; \
 	tar -xzvf apache-tomcat-${TOMCAT_VERSION}.tar.gz ; \
 	rm -r apache-tomcat-${TOMCAT_VERSION}/webapps/* ; \
 	rm apache-tomcat-${TOMCAT_VERSION}.tar.gz ; \
