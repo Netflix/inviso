@@ -3,7 +3,7 @@ arrow==0.4.2
 boto==2.26.1
 elasticsearch==1.0.0
 futures==2.1.6
-protobuf==2.5.0
+protobuf==3.18.3
 python-dateutil==2.2
 pytz==2013.9
 requests==2.3.0
