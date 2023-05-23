@@ -6,7 +6,7 @@ futures==2.1.6
 protobuf==2.5.0
 python-dateutil==2.2
 pytz==2013.9
-requests==2.3.0
+requests==2.31.0
 six==1.5.2
 snakebite==2.4.1
 urllib3==1.7.1
